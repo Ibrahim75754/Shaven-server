@@ -32,6 +32,7 @@ async function run() {
         //.................product...............................
         // insert one product...............
         app.post('/products', async (req, res) => {
+
             const imageBuffer = Buffer.from(req.files.img.data.toString('base64'), 'base64');
             const product = {
                 ...req.body, img: imageBuffer
@@ -54,17 +55,20 @@ async function run() {
         });
         //update product.................
         app.put('/products/update/:id', async (req, res) => {
+            // console.log("body", req.body);
+            // console.log("files", req.files);
             const id = req.params.id;
             const updatePackage = req.body;
+            const imageBuffer = Buffer.from(req.files.img.data.toString('base64'), 'base64');
+
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                    img: updatePackage.img,
+                    img: imageBuffer,
                     name: updatePackage.name,
                     description: updatePackage.description,
                     price: updatePackage.price,
-                    duration: updatePackage.duration,
                 },
             };
             const result = await productsCollection.updateOne(filter, updateDoc, options);
@@ -201,7 +205,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-    res.send('Hello Doctors portal!')
+    res.send('Shaven assignment 12 !')
 })
 
 app.listen(port, () => {
